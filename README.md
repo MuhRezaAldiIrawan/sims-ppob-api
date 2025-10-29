@@ -80,42 +80,7 @@ npm start
 
 Server akan berjalan di `http://localhost:3000`
 
-## � Deployment ke Production
-
-### Deploy ke Vercel
-
-API ini sudah dikonfigurasi untuk deploy ke Vercel dengan cloud storage menggunakan Cloudinary. 
-
-**Setup Cloudinary:**
-1. Buat akun di [Cloudinary](https://cloudinary.com/)
-2. Dapatkan credentials: Cloud Name, API Key, API Secret
-
-**Environment Variables di Vercel:**
-```
-DB_HOST=your_database_host
-DB_USER=your_database_user
-DB_PASSWORD=your_database_password
-DB_NAME=your_database_name
-JWT_SECRET=your_jwt_secret
-CLOUDINARY_CLOUD_NAME=your_cloudinary_cloud_name
-CLOUDINARY_API_KEY=your_cloudinary_api_key
-CLOUDINARY_API_SECRET=your_cloudinary_api_secret
-NODE_ENV=production
-```
-
-**Deploy Command:**
-```bash
-vercel --prod
-```
-
-**Fitur Hybrid Storage:**
-- **Development**: File upload ke folder `uploads/` lokal
-- **Production**: File upload ke Cloudinary cloud storage
-- Sistem otomatis detect environment dan switch storage method
-
-Lihat `DEPLOYMENT.md` untuk panduan lengkap deployment.
-
-## �📁 Struktur Project
+## 📁 Struktur Project
 
 ```
 sims-ppob-api/
@@ -808,46 +773,6 @@ PUT /profile/image
 # Upload file .pdf atau .txt
 ```
 Expected: Status 102, "Format Image tidak sesuai"
-
----
-
-### 🔧 Tips Testing dengan Postman
-
-1. **Buat Environment:**
-   - Variable: `base_url` = `http://localhost:3000`
-   - Variable: `token` = kosongkan dulu
-
-2. **Set Token Otomatis setelah Login:**
-   Tambahkan script di tab "Tests" pada endpoint login:
-   ```javascript
-   var jsonData = pm.response.json();
-   pm.environment.set("token", jsonData.data.token);
-   ```
-
-3. **Gunakan Variable di Request:**
-   - URL: `{{base_url}}/profile`
-   - Header Authorization: `Bearer {{token}}`
-
-4. **Buat Collection dengan Request Berurutan:**
-   - Registration
-   - Login (auto save token)
-   - Get Profile
-   - dst...
-
----
-
-### 🔧 Tips Testing dengan Thunder Client (VS Code)
-
-1. **Install Extension:** Thunder Client di VS Code
-2. **Buat Collection:** SIMS PPOB API
-3. **Set Environment:**
-   ```json
-   {
-     "base_url": "http://localhost:3000",
-     "token": ""
-   }
-   ```
-4. **Test Request satu per satu** sesuai flow diatas
 
 ---
 
