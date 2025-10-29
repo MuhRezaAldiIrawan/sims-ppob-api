@@ -62,33 +62,66 @@ exports.healthCheck = async (req, res) => {
             overallStatus = 503;
         }
 
-        // Uploads Directory Check
-        const uploadsDir = path.join(__dirname, '../../uploads');
-        try {
-            const stats = fs.statSync(uploadsDir);
-            const isWritable = fs.constants && (fs.accessSync(uploadsDir, fs.constants.W_OK), true);
+        // Uploads Directory Check (skip in production/Vercel)
+        const isProduction = process.env.NODE_ENV === 'production' || process.env.VERCEL;
+        
+        if (isProduction) {
+            // In production, we use Cloudinary - check environment variables instead
+            const cloudinaryVars = ['CLOUDINARY_CLOUD_NAME', 'CLOUDINARY_API_KEY', 'CLOUDINARY_API_SECRET'];
+            const missingCloudinaryVars = cloudinaryVars.filter(varName => !process.env[varName]);
             
             checks.checks.uploads = {
-                status: 'OK',
-                message: 'Uploads directory is accessible',
-                path: uploadsDir,
-                exists: stats.isDirectory(),
-                writable: true
+                status: missingCloudinaryVars.length > 0 ? 'WARNING' : 'OK',
+                message: missingCloudinaryVars.length > 0 
+                    ? `Cloudinary configuration incomplete. Missing: ${missingCloudinaryVars.join(', ')}`
+                    : 'Cloudinary configuration is complete',
+                provider: 'Cloudinary',
+                environment: 'production'
             };
-        } catch (uploadsError) {
-            checks.checks.uploads = {
-                status: 'ERROR',
-                message: 'Uploads directory check failed',
-                error: uploadsError.message,
-                path: uploadsDir
-            };
-            overallStatus = 503;
+            
+            if (missingCloudinaryVars.length > 0) {
+                overallStatus = 503;
+            }
+        } else {
+            // In development, check local uploads directory
+            const uploadsDir = path.join(__dirname, '../../uploads');
+            try {
+                const stats = fs.statSync(uploadsDir);
+                const isWritable = fs.constants && (fs.accessSync(uploadsDir, fs.constants.W_OK), true);
+                
+                checks.checks.uploads = {
+                    status: 'OK',
+                    message: 'Uploads directory is accessible',
+                    path: uploadsDir,
+                    exists: stats.isDirectory(),
+                    writable: true,
+                    provider: 'Local Storage',
+                    environment: 'development'
+                };
+            } catch (uploadsError) {
+                checks.checks.uploads = {
+                    status: 'ERROR',
+                    message: 'Uploads directory check failed',
+                    error: uploadsError.message,
+                    path: uploadsDir,
+                    provider: 'Local Storage',
+                    environment: 'development'
+                };
+                overallStatus = 503;
+            }
         }
 
         // Environment Variables Check
-        const requiredEnvVars = [
+        let requiredEnvVars = [
             'DB_HOST', 'DB_USER', 'DB_PASSWORD', 'DB_NAME', 'JWT_SECRET'
         ];
+        
+        // Add Cloudinary variables for production
+        if (isProduction) {
+            requiredEnvVars = requiredEnvVars.concat([
+                'CLOUDINARY_CLOUD_NAME', 'CLOUDINARY_API_KEY', 'CLOUDINARY_API_SECRET'
+            ]);
+        }
         
         let envStatus = 'OK';
         let missingVars = [];
@@ -104,7 +137,8 @@ exports.healthCheck = async (req, res) => {
             status: envStatus,
             message: envStatus === 'OK' ? 'All required environment variables are set' : `Missing environment variables: ${missingVars.join(', ')}`,
             checkedCount: requiredEnvVars.length,
-            missingCount: missingVars.length
+            missingCount: missingVars.length,
+            environment: isProduction ? 'production' : 'development'
         };
 
         // System Resources Check

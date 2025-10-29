@@ -89,7 +89,18 @@ exports.updateProfileImage = async (req, res) => {
         }
 
         const userId = req.user.userId;
-        const imageUrl = `${req.protocol}://${req.get('host')}/uploads/${req.file.filename}`;
+        
+        // Check if using Cloudinary (production) or local storage (development)
+        const isProduction = process.env.NODE_ENV === 'production' || process.env.VERCEL;
+        
+        let imageUrl;
+        if (isProduction) {
+            // For Cloudinary, use the secure_url provided by multer-storage-cloudinary
+            imageUrl = req.file.path; // This contains the Cloudinary URL
+        } else {
+            // For local development, construct local URL
+            imageUrl = `${req.protocol}://${req.get('host')}/uploads/${req.file.filename}`;
+        }
 
         // Update profile image
         await db.query(

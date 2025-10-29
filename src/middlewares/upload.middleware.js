@@ -1,16 +1,37 @@
 const multer = require('multer');
 const path = require('path');
+const { CloudinaryStorage } = require('multer-storage-cloudinary');
+const cloudinary = require('../config/cloudinary');
 
-// Storage configuration
-const storage = multer.diskStorage({
-    destination: function (req, file, cb) {
-        cb(null, 'uploads/');
-    },
-    filename: function (req, file, cb) {
-        const uniqueSuffix = Date.now() + '-' + Math.round(Math.random() * 1E9);
-        cb(null, 'profile-' + uniqueSuffix + path.extname(file.originalname));
-    }
-});
+// Check if we're in production (Vercel) or development
+const isProduction = process.env.NODE_ENV === 'production' || process.env.VERCEL;
+
+// Storage configuration - use Cloudinary for production, local for development
+const storage = isProduction ? 
+    new CloudinaryStorage({
+        cloudinary: cloudinary,
+        params: {
+            folder: 'profile_pictures', // Folder name in Cloudinary
+            allowed_formats: ['jpeg', 'jpg', 'png'],
+            transformation: [
+                { width: 500, height: 500, crop: 'limit' }, // Resize image
+                { quality: 'auto' } // Auto optimize
+            ],
+            public_id: (req, file) => {
+                const uniqueSuffix = Date.now() + '-' + Math.round(Math.random() * 1E9);
+                return 'profile-' + uniqueSuffix;
+            }
+        }
+    }) :
+    multer.diskStorage({
+        destination: function (req, file, cb) {
+            cb(null, 'uploads/');
+        },
+        filename: function (req, file, cb) {
+            const uniqueSuffix = Date.now() + '-' + Math.round(Math.random() * 1E9);
+            cb(null, 'profile-' + uniqueSuffix + path.extname(file.originalname));
+        }
+    });
 
 // File filter
 const fileFilter = (req, file, cb) => {

@@ -80,7 +80,42 @@ npm start
 
 Server akan berjalan di `http://localhost:3000`
 
-## 📁 Struktur Project
+## � Deployment ke Production
+
+### Deploy ke Vercel
+
+API ini sudah dikonfigurasi untuk deploy ke Vercel dengan cloud storage menggunakan Cloudinary. 
+
+**Setup Cloudinary:**
+1. Buat akun di [Cloudinary](https://cloudinary.com/)
+2. Dapatkan credentials: Cloud Name, API Key, API Secret
+
+**Environment Variables di Vercel:**
+```
+DB_HOST=your_database_host
+DB_USER=your_database_user
+DB_PASSWORD=your_database_password
+DB_NAME=your_database_name
+JWT_SECRET=your_jwt_secret
+CLOUDINARY_CLOUD_NAME=your_cloudinary_cloud_name
+CLOUDINARY_API_KEY=your_cloudinary_api_key
+CLOUDINARY_API_SECRET=your_cloudinary_api_secret
+NODE_ENV=production
+```
+
+**Deploy Command:**
+```bash
+vercel --prod
+```
+
+**Fitur Hybrid Storage:**
+- **Development**: File upload ke folder `uploads/` lokal
+- **Production**: File upload ke Cloudinary cloud storage
+- Sistem otomatis detect environment dan switch storage method
+
+Lihat `DEPLOYMENT.md` untuk panduan lengkap deployment.
+
+## �📁 Struktur Project
 
 ```
 sims-ppob-api/
