@@ -6,6 +6,7 @@ const authController = require("../controllers/auth.controller");
 const profileController = require("../controllers/profile.controller");
 const informationController = require("../controllers/information.controller");
 const transactionController = require("../controllers/transaction.controller");
+const healthController = require("../controllers/health.controller");
 
 // Middlewares
 const authMiddleware = require("../middlewares/auth.middleware");
@@ -13,6 +14,10 @@ const { upload, handleUploadError } = require("../middlewares/upload.middleware"
 
 // Validators
 const { registerValidation, loginValidation, updateProfileValidation, topUpValidation, transactionValidation } = require("../validators/request.validator");
+
+// Health check routes (public)
+router.get("/", healthController.healthCheck);
+router.get("/health", healthController.simpleHealthCheck);
 
 // Auth routes (public)
 router.post("/registration", registerValidation, authController.register);

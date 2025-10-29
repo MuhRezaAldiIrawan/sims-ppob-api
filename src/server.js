@@ -27,15 +27,6 @@ const routes = require('./routes/index');
 // API routes
 app.use('/', routes);
 
-// Health check endpoint
-app.get('/health', (req, res) => {
-    res.status(200).json({
-        status: 'OK',
-        message: 'Server is running',
-        timestamp: new Date().toISOString()
-    });
-});
-
 // 404 handler
 app.use((req, res) => {
     res.status(404).json({
