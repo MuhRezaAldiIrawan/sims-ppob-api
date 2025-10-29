@@ -288,6 +288,8 @@ Sistem perhitungan saldo yang akurat:
 
 #### **Step 1: Registration**
 
+![Registration](./uploads/registrations.png)
+
 **Endpoint:** `POST http://localhost:3000/registration`
 
 **Headers:**
@@ -329,6 +331,8 @@ curl -X POST http://localhost:3000/registration \
 ---
 
 #### **Step 2: Login**
+
+![Login](./uploads/login.png)
 
 **Endpoint:** `POST http://localhost:3000/login`
 
@@ -372,6 +376,8 @@ curl -X POST http://localhost:3000/login \
 
 #### **Step 3: Get Profile**
 
+![Get Profile](./uploads/get%20profile.png)
+
 **Endpoint:** `GET http://localhost:3000/profile`
 
 **Headers:**
@@ -402,6 +408,8 @@ curl -X GET http://localhost:3000/profile \
 ---
 
 #### **Step 4: Update Profile**
+
+![Update Profile](./uploads/update%20profile.png)
 
 **Endpoint:** `PUT http://localhost:3000/profile/update`
 
@@ -448,6 +456,8 @@ curl -X PUT http://localhost:3000/profile/update \
 
 #### **Step 5: Update Profile Image**
 
+![Update Profile Image](./uploads/update%20profile%20image.png)
+
 **Endpoint:** `PUT http://localhost:3000/profile/image`
 
 **Headers:**
@@ -486,6 +496,8 @@ curl -X PUT http://localhost:3000/profile/image \
 
 #### **Step 6: Get Banner**
 
+![Get Banner](./uploads/get%20banner.png)
+
 **Endpoint:** `GET http://localhost:3000/banner`
 
 **Headers:**
@@ -518,6 +530,8 @@ curl -X GET http://localhost:3000/banner \
 ---
 
 #### **Step 7: Get Services**
+
+![Get Services](./uploads/get%20services.png)
 
 **Endpoint:** `GET http://localhost:3000/services`
 
@@ -559,6 +573,8 @@ curl -X GET http://localhost:3000/services \
 
 #### **Step 8: Get Balance**
 
+![Get Balance](./uploads/get%20balance.png)
+
 **Endpoint:** `GET http://localhost:3000/balance`
 
 **Headers:**
@@ -586,6 +602,8 @@ curl -X GET http://localhost:3000/balance \
 ---
 
 #### **Step 9: Top Up Balance**
+
+![Top Up](./uploads/topup.png)
 
 **Endpoint:** `POST http://localhost:3000/topup`
 
@@ -627,6 +645,8 @@ curl -X POST http://localhost:3000/topup \
 
 #### **Step 10: Transaction (Payment)**
 
+![Transaction PULSA](./uploads/transaction-%20pulsa.png)
+
 **Endpoint:** `POST http://localhost:3000/transaction`
 
 **Headers:**
@@ -658,6 +678,10 @@ Content-Type: application/json
 }
 ```
 
+**Alternative Transaction Example (PLN):**
+
+![Transaction PLN](./uploads/transaction-%20pln.png)
+
 **cURL:**
 ```bash
 curl -X POST http://localhost:3000/transaction \
@@ -671,6 +695,8 @@ curl -X POST http://localhost:3000/transaction \
 ---
 
 #### **Step 11: Get Transaction History**
+
+![Transaction History](./uploads/transaction%20histori.png)
 
 **Endpoint:** `GET http://localhost:3000/transaction/history`
 
